@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 	}
 	if(pid == 0)
 	{
-		setuid(atoi(argv[1]));
+		setuid(atoi(argv[1])); //return 0 if no digits
 		execvp(argv[2], argv+2);
 		perror("");
 		exit(1);
