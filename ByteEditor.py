@@ -94,9 +94,9 @@ class myByte:
             
                 # Create label for hexadecimal value
                 if i%2 != 0:
-                    self.list_hex[i] = tk.Label(self.init_window, text="", width=15, bg="red",font =15)
+                    self.list_hex[i] = tk.Label(self.init_window, text="", width=15, bg="lightskyblue",font =("Times Newman", 15, "bold"))
                 else:
-                    self.list_hex[i] = tk.Label(self.init_window, text="", width=15,font =15)                
+                    self.list_hex[i] = tk.Label(self.init_window, text="", width=15,font =("Times Newman", 15, "bold"))                
                 self.list_hex[i].grid(row=i+3, column=8+5, padx=15, pady=15)
         
     def update_hex(self, byte_row):
