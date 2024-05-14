@@ -13,6 +13,8 @@ class myByte:
         self.init_window =init_window_name
         self.entry_bits = [[tk.StringVar(value='0') for _ in range(8)] for _ in range(8)]     
         self.init_input = tk.StringVar()
+        self.set_bit_Len = tk.StringVar()
+        self.set_bit_value = tk.StringVar()
         
     # set the window
     def set_init_bytes(self):
@@ -26,9 +28,28 @@ class myByte:
         byteSeq = text[0]
         bitSeq = text[2]
         print (f"will set Byte {byteSeq}'s value to 1 after bit {bitSeq}")
+       
+        # check the length to set and the input value.
+        bitLen= self.set_bit_Len.get()
+        bitvalue = self.set_bit_value.get()
+
+        print (f"len:{bitLen}, value:{bitvalue}, {len(bitvalue)}")
+
+        if len(bitvalue) != int(bitLen):
+            messagebox.showerror("error","The input value is too long...",)
+            self.set_bit_value.set("")
         
-        for i in range(8-int(bitSeq)):
-            self.entry_bits[int(byteSeq)-1][i].set(1)            
+        #print (f"{self.set_bit_value.get()}")
+
+        # get the start bit pos to set given vlaue.
+        startPos = 8 - int(bitSeq) - int(bitLen) 
+        for i in range(8): # reset the bit to 0
+            self.entry_bits[int(byteSeq)-1][i].set(0)
+            if i -startPos >=0 and i-startPos < int(bitLen):
+                #print(f"{i-startPos}:{bitvalue[i-startPos]}")
+                self.entry_bits[int(byteSeq)-1][i].set(bitvalue[i-startPos])              
+        #for i in range(8-int(bitSeq)):
+        #    self.entry_bits[int(byteSeq)-1][i].set()            
         self.update_hex(byteSeq)
     
     def set_init_window(self):    
@@ -43,10 +64,24 @@ class myByte:
         self.setentry = tk.Entry(self.init_window, width=10,textvariable = self.init_input, bg="pink",  font=25)
         self.setentry.grid(row=1, column=1, padx=7, pady=7) 
         self.setentry.bind("<Return>", self.update_bit_value)
+
+        self.tip_label = tk.Label(self.init_window, text="Len", width=3,font =15)
+        self.tip_label.grid(row=1, column=2, padx=5, pady=5)
+
+        self.setentry = tk.Entry(self.init_window, width=3,textvariable = self.set_bit_Len, bg="pink",  font=25)
+        self.setentry.grid(row=1, column=3, padx=7, pady=7) 
+        self.setentry.bind("<Return>", self.update_bit_value)
+
+        self.tip_label = tk.Label(self.init_window, text="Value", width=5,font =15)
+        self.tip_label.grid(row=1, column=4, padx=5, pady=5)
+
+        self.setentry = tk.Entry(self.init_window, width=8,textvariable = self.set_bit_value, bg="pink",  font=25)
+        self.setentry.grid(row=1, column=5, padx=5, pady=5) 
+        self.setentry.bind("<Return>", self.update_bit_value)
         for i in range(8): 
             for j in range(8): # every byte has 8 bits. Crated 1 text for 1 bit.
                 # Create label for hexadecimal value
-                self.tip_label = tk.Label(self.init_window, text="BYTE"+str(i+1), width=7,font =15)
+                self.tip_label = tk.Label(self.init_window, text="BYTE"+str(i), width=7,font =15)
                 self.tip_label.grid(row=i+3, column=1, padx=7, pady=7)
                 
                 if i%2 != 0:
@@ -74,7 +109,7 @@ class myByte:
 
 def gui_start():
     init_window = tk.Tk()
-    init_window.title("!ByteEditor: For Byte m, set all of the value to 1 after the <n>th bit; eg: set 4.3==>> 11111000 (0xF8)")
+    init_window.title("!ByteEditor: For Byte m, set the given bit value after the <n>th bit; eg: set <4.3> value(1101)=>> 01101000 (0x68)")
     
     app = myByte(init_window)
     app.set_init_bytes()
